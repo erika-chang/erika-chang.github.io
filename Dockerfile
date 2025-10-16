@@ -2,21 +2,16 @@
 FROM node:20.0-alpine AS build
 WORKDIR /app
 
-# Instala dependências
 COPY package*.json ./
 RUN npm install
-
-# Copia o restante
 COPY . .
 
-# >>> Patch: não quebrar o build se o Medium der erro
-# Substitui o throw de erro do Medium por um console.warn
+# Evita quebrar caso Medium retorne 500
 RUN sed -i 's/throw new Error(ERR.requestMediumFailed);/console.warn("Medium fetch failed (non-blocking)");/' fetch.js
 
-# Faz o build de produção
 RUN npm run build
 
-# Stage 2 – Servir (opcional p/ testar localmente)
+# Stage 2 – Servir local (opcional)
 FROM node:20.0-alpine AS serve
 WORKDIR /app
 RUN npm install -g serve
