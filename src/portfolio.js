@@ -29,7 +29,7 @@ const greeting = {
 const socialMediaLinks = {
   github: "https://github.com/erika-chang",
   linkedin: "https://www.linkedin.com/in/ecdazevedo",
-  email:"hello@erikachang.me",
+  gmail:"hello@erikachang.me",
   // Optional: add more (kaggle, medium, etc.) in src/components/SocialMedia if you want
   display: true
 };
