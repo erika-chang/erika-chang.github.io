@@ -48,13 +48,13 @@ export default function GithubProfileCard({prof}) {
             </div>
             <SocialMedia />
           </div>
-          <div className="image-content-profile">
+  {/*         <div className="image-content-profile">
             <img
               src={prof.avatarUrl}
               alt={prof.name}
               className="profile-image"
             />
-          </div>
+          </div> */}
         </div>
       </div>
     </Fade>

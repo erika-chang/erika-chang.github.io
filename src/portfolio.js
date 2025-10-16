@@ -165,7 +165,7 @@ const bigProjects = {
         "Privacy-first RAG chatbot for medical intake using zero-persistence architecture and scalable cloud deployment.",
       footerLink: [
         // Add your repo or demo links when available
-        // { name: "Repository", url: "https://github.com/..." }
+        { name: "SecureMed Chat", url: "https://github.com/caazzi/securemed_chat" }
       ]
     },
     {
@@ -173,14 +173,18 @@ const bigProjects = {
       projectName: "Eyesense",
       projectDesc:
         "Deep-learning model for early eye-disease detection (TensorFlow/Keras) with emphasis on explainability.",
-      footerLink: []
+      footerLink: [
+        { name: "Eyesense", url: "https://eyesense.streamlit.app/" }
+      ]
     },
     {
       image: require("./assets/images/etlLogo.png"), // optional logo
       projectName: "ETL Pipeline",
       projectDesc:
         "End-to-end pipeline transforming raw sales data into analytics-ready tables for BI dashboards (SQLAlchemy, PostgreSQL, Docker).",
-      footerLink: []
+      footerLink: [
+        { name: "ETL pipeline", url: "https://github.com/erika-chang/etl-pipeline/" }
+      ]
     }
   ],
   display: true
