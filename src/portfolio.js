@@ -15,13 +15,13 @@ const splashScreen = {
 const illustration = { animated: true };
 
 const greeting = {
-  username: "Erika Chang de Azevedo, Ph.D.",
+  username: "E. C. Azevedo, Ph.D.",
   title: "Hi, I'm Erika",
   subTitle: emoji(
     "Data Scientist with a PhD in Biomolecular Physics. I build predictive models, automated ETL pipelines, and GenAI applications that turn complex data into decisions people can trust."
   ),
   // Put your PDF in /public as resume.pdf or change this link to an external URL
-  resumeLink: "/resume.pdf",
+  resumeLink: "https://docs.google.com/document/d/1PGOWuCIVX6C4NKNYJkO8_61efhtPwWZbgnzyZdi2QII/edit?usp=sharing",
   displayGreeting: true
 };
 
@@ -29,7 +29,6 @@ const greeting = {
 const socialMediaLinks = {
   github: "https://github.com/erika-chang",
   linkedin: "https://www.linkedin.com/in/ecdazevedo",
-  gmail: "erikaa.chang@gmail.com",
   // Optional: add more (kaggle, medium, etc.) in src/components/SocialMedia if you want
   display: true
 };
@@ -75,7 +74,7 @@ const educationInfo = {
       logo: require("./assets/images/uspLogo.png"), // add this asset
       subHeader: "Ph.D. in Biomolecular Physics",
       duration: "Feb 2015 – May 2020",
-      desc: "Computational modeling on GPU clusters and cross-disciplinary research."
+      desc: "Molecular Dynamics on GPU clusters and cross-disciplinary research."
     },
     {
       schoolName: "University of São Paulo (USP)",
@@ -91,9 +90,9 @@ const educationInfo = {
 const techStack = {
   viewSkillBars: true,
   experience: [
-    { Stack: "Machine Learning & GenAI", progressPercentage: "80%" },
-    { Stack: "Data Engineering (ETL, APIs, SQL)", progressPercentage: "85%" },
-    { Stack: "Visualization & Storytelling", progressPercentage: "85%" }
+    { Stack: "Machine Learning & GenAI", progressPercentage: "85%" },
+    { Stack: "Data Engineering (ETL, APIs, SQL)", progressPercentage: "90%" },
+    { Stack: "Visualization & Storytelling", progressPercentage: "90%" }
   ],
   displayCodersrank: false
 };
@@ -116,7 +115,7 @@ const workExperiences = {
       ]
     },
     {
-      role: "Data Science & AI Bootcamp (Full-time)",
+      role: "Data Science & AI Bootcamp",
       company: "Le Wagon",
       companylogo: require("./assets/images/lewagonLogo.png"),
       date: "Jan 2025 – Mar 2025",
@@ -199,7 +198,7 @@ const blogSection = {
   title: "Blog",
   subtitle:
     "I write about practical data science and lessons learned from real projects.",
-  displayMediumBlogs: "false",
+  displayMediumBlogs: "true",
   blogs: [],
   display: false // hidden (not in CV)
 };
@@ -229,11 +228,10 @@ const resumeSection = {
 
 // Contact Section
 const contactInfo = {
-  title: emoji("Contact Me ☎️"),
+  title: emoji("Contact Me 📧"),
   subtitle:
     "Interested in collaborating or just want to say hi? My inbox is open.",
-  number: "+31 6 17616505",
-  email_address: "erikaa.chang@gmail.com"
+  email_address: "hello@erikachang.me"
 };
 
 // Twitter Section (hidden)

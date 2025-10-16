@@ -6,8 +6,10 @@ COPY package*.json ./
 RUN npm install
 COPY . .
 
-# Evita quebrar caso Medium retorne 500
-RUN sed -i 's/throw new Error(ERR.requestMediumFailed);/console.warn("Medium fetch failed (non-blocking)");/' fetch.js
+# 1) Se o template ainda joga erro no Medium, transforma em aviso:
+RUN sed -i 's/throw new Error(ERR.requestMediumFailed);/console.warn("Medium fetch failed (non-blocking)");/' fetch.js || true
+# 2) Remove o 'node fetch.js &&' do script de build (pula fetch de GitHub e Medium)
+RUN sed -i 's/node fetch.js && //g' package.json
 
 RUN npm run build
 
