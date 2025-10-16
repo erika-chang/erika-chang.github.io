@@ -5,6 +5,7 @@ export default function ChatWidget() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const listRef = useRef(null);
+  const textareaRef = useRef(null);
 
   // Auto-scroll para a última mensagem
   useEffect(() => {
@@ -12,6 +13,15 @@ export default function ChatWidget() {
       listRef.current.scrollTop = listRef.current.scrollHeight;
     }
   }, [messages, open]);
+
+  // Auto-resize do textarea
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto"; // reseta antes de medir
+      textareaRef.current.style.height =
+        Math.min(textareaRef.current.scrollHeight, 220) + "px"; // limita o crescimento
+    }
+  }, [input]);
 
   async function sendMessage(e) {
     e.preventDefault();
@@ -41,7 +51,7 @@ export default function ChatWidget() {
     }
   }
 
-  // Ícone SVG do botão
+  // Ícone SVG do botão flutuante
   const ChatIcon = () => (
     <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
       <path
@@ -53,7 +63,7 @@ export default function ChatWidget() {
 
   return (
     <>
-      {/* FAB do chat */}
+      {/* Botão flutuante */}
       <button
         onClick={() => setOpen(true)}
         aria-label="Open chat"
@@ -67,7 +77,7 @@ export default function ChatWidget() {
           borderRadius: "9999px",
           border: "none",
           cursor: "pointer",
-          background: "#5932ea",       // primária
+          background: "#5932ea",
           color: "white",
           boxShadow: "0 10px 20px rgba(0,0,0,.20)",
           display: "flex",
@@ -75,7 +85,7 @@ export default function ChatWidget() {
           justifyContent: "center",
           transition: "transform .08s ease, box-shadow .2s ease"
         }}
-        onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.98)")}
+        onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.97)")}
         onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
         onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
       >
@@ -91,9 +101,9 @@ export default function ChatWidget() {
             position: "fixed",
             right: 24,
             bottom: 96,
-            width: 420,              // maior
+            width: 420,
             maxWidth: "90vw",
-            maxHeight: "72vh",       // mais alto
+            maxHeight: "72vh",
             background: "white",
             borderRadius: 18,
             boxShadow: "0 24px 48px rgba(0,0,0,.24)",
@@ -140,7 +150,7 @@ export default function ChatWidget() {
               padding: 14,
               overflowY: "auto",
               flex: 1,
-              background: "#f8fafc" // leve cinza
+              background: "#f8fafc"
             }}
           >
             {messages.map((m, i) => (
@@ -174,11 +184,12 @@ export default function ChatWidget() {
             ))}
           </div>
 
-          {/* Entrada com textarea maior */}
+          {/* Campo de entrada com auto-resize */}
           <form
             onSubmit={sendMessage}
             style={{
               display: "flex",
+              alignItems: "flex-end",
               gap: 10,
               padding: 14,
               borderTop: "1px solid #e2e8f0",
@@ -186,42 +197,42 @@ export default function ChatWidget() {
             }}
           >
             <textarea
+              ref={textareaRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Type your message…"
-              rows={3}                 // altura inicial maior
+              placeholder="Type your message..."
               style={{
                 flex: 1,
-                minHeight: 56,         // garante altura grande
-                maxHeight: 140,        // evita crescer demais
-                resize: "vertical",
-                borderRadius: 10,
+                minHeight: "60px",
+                maxHeight: "220px",
+                resize: "none",
+                borderRadius: "10px",
                 border: "1px solid #cbd5e1",
-                padding: "12px 14px",
-                fontSize: 15,
-                lineHeight: 1.4,
-                outline: "none"
+                padding: "14px 16px",
+                fontSize: "16px",
+                lineHeight: 1.5,
+                color: "#0f172a",
+                outline: "none",
+                overflowY: "hidden",
+                backgroundColor: "#fff",
+                boxShadow: "inset 0 2px 5px rgba(0,0,0,0.04)"
               }}
             />
             <button
               type="submit"
               style={{
                 border: "none",
-                borderRadius: 10,
-                padding: "0 18px",
-                minWidth: 96,
+                borderRadius: "10px",
+                padding: "14px 18px",
                 background: "#5932ea",
                 color: "white",
                 fontWeight: 700,
-                fontSize: 15,
+                fontSize: "15px",
                 cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                boxShadow: "0 10px 20px rgba(89,50,234,.25)",
+                boxShadow: "0 6px 12px rgba(89,50,234,0.25)",
                 transition: "filter .15s ease"
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.filter = "brightness(1.02)")}
+              onMouseEnter={(e) => (e.currentTarget.style.filter = "brightness(1.05)")}
               onMouseLeave={(e) => (e.currentTarget.style.filter = "none")}
             >
               Send

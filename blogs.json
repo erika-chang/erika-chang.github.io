@@ -1,1 +1,1 @@
-{"status":"error","message":"Feed could not be converted, probably not a valid RSS feed."}
+{"status":"error","message":"Cannot download this RSS feed, make sure the Rss URL is correct."}
