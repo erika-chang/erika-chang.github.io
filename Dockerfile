@@ -1,29 +1,25 @@
-# This file is the main docker file configurations
-
-# Official Node JS runtime as a parent image
-FROM node:20.0-alpine
-
-# Set the working directory to ./app
+# Stage 1 – Build
+FROM node:20.0-alpine AS build
 WORKDIR /app
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
-COPY package.json ./
-
-RUN apk add --no-cache git
-
-# Install any needed packages
+# Instala dependências
+COPY package*.json ./
 RUN npm install
 
-# Audit fix npm packages
-RUN npm audit fix
+# Copia o restante
+COPY . .
 
-# Bundle app source
-COPY . /app
+# >>> Patch: não quebrar o build se o Medium der erro
+# Substitui o throw de erro do Medium por um console.warn
+RUN sed -i 's/throw new Error(ERR.requestMediumFailed);/console.warn("Medium fetch failed (non-blocking)");/' fetch.js
 
-# Make port 3000 available to the world outside this container
+# Faz o build de produção
+RUN npm run build
+
+# Stage 2 – Servir (opcional p/ testar localmente)
+FROM node:20.0-alpine AS serve
+WORKDIR /app
+RUN npm install -g serve
+COPY --from=build /app/build ./build
 EXPOSE 3000
-
-# Run app.js when the container launches
-CMD ["npm", "start"]
+CMD ["serve", "-s", "build", "-l", "3000"]
