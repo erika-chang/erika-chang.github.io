@@ -63,34 +63,45 @@ export default function ChatWidget() {
 
   return (
     <>
-      {/* Botão flutuante */}
+      {/* Botão flutuante — maior e mais visível */}
       <button
         onClick={() => setOpen(true)}
         aria-label="Open chat"
         style={{
           position: "fixed",
-          right: 24,
-          bottom: 24,
+          right: 28,
+          bottom: 28,
           zIndex: 1000,
-          width: 56,
-          height: 56,
-          borderRadius: "9999px",
+          width: 68,                // era 56 → agora maior
+          height: 68,
+          borderRadius: "50%",
           border: "none",
           cursor: "pointer",
-          background: "#5932ea",
+          background: "linear-gradient(145deg, #6842ff, #4a23d8)",
           color: "white",
-          boxShadow: "0 10px 20px rgba(0,0,0,.20)",
+          boxShadow: "0 12px 24px rgba(89,50,234,0.35)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          transition: "transform .08s ease, box-shadow .2s ease"
+          transition: "transform .1s ease, box-shadow .2s ease",
         }}
-        onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.97)")}
+        onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.96)")}
         onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
         onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
       >
-        <ChatIcon />
+        {/* Ícone ampliado */}
+        <svg
+          width="30"               // era 22 → ampliado
+          height="30"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z" />
+        </svg>
       </button>
+
+
 
       {/* Janela do chat */}
       {open && (
