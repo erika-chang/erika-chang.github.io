@@ -205,7 +205,7 @@ const blogSection = {
     "I write about practical data science and lessons learned from real projects.",
   displayMediumBlogs: "true",
   blogs: [],
-  display: false // hidden (not in CV)
+  display: true // hidden (not in CV)
 };
 
 // Talks Section (hidden)
