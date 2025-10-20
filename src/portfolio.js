@@ -232,7 +232,7 @@ const resumeSection = {
 
 // Contact Section
 const contactInfo = {
-  title: emoji("Contact Me 📧"),
+  title: "Reach Out to me!",
   subtitle:
     "Interested in collaborating or just want to say hi? My inbox is open.",
   email_address: "hello@erikachang.me"
