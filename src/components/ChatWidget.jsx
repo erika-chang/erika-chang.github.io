@@ -1,4 +1,14 @@
 import React, { useState, useRef, useEffect } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import emojiToolkit from "emoji-toolkit";
+
+
+function withEmojis(text = "") {
+  // Converte shortcodes :...: (GitHub/Slack) para Unicode.
+  // Se já for Unicode, o toolkit não altera.
+  return emojiToolkit.shortnameToUnicode(text);
+}
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
@@ -195,33 +205,43 @@ async function sendMessage(e) {
             }}
           >
             {messages.map((m, i) => (
-              <div
-                key={i}
-                style={{
-                  margin: "10px 0",
-                  display: "flex",
-                  justifyContent: m.role === "user" ? "flex-end" : "flex-start"
+            <div
+              style={{
+                background: m.role === "user" ? "#5932ea" : "white",
+                color: m.role === "user" ? "white" : "#0f172a",
+                border: m.role === "user" ? "none" : "1px solid #e2e8f0",
+                borderRadius: 14,
+                padding: "12px 14px",
+                maxWidth: "85%",
+                lineHeight: 1.55,
+                fontSize: 15,
+                boxShadow:
+                  m.role === "user"
+                    ? "0 6px 16px rgba(89,50,234,.20)"
+                    : "0 4px 10px rgba(0,0,0,.06)"
+              }}
+            >
+            {m.role === "assistant" ? (
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  li: ({children}) => <li style={{margin: "4px 0"}}>{children}</li>,
+                  ul: ({children}) => <ul style={{paddingLeft: 20, margin: "6px 0"}}>{children}</ul>,
+                  strong: ({children}) => <strong style={{fontWeight: 700}}>{children}</strong>,
+                  em: ({children}) => <em style={{fontStyle: "italic"}}>{children}</em>,
+                  p: ({children}) => <p style={{margin: "6px 0"}}>{children}</p>,
+                  a: (props) => <a {...props} target="_blank" rel="noopener noreferrer" />
                 }}
               >
-                <div
-                  style={{
-                    background: m.role === "user" ? "#5932ea" : "white",
-                    color: m.role === "user" ? "white" : "#0f172a",
-                    border: m.role === "user" ? "none" : "1px solid #e2e8f0",
-                    borderRadius: 14,
-                    padding: "10px 12px",
-                    maxWidth: "80%",
-                    lineHeight: 1.45,
-                    fontSize: 15,
-                    boxShadow:
-                      m.role === "user"
-                        ? "0 6px 16px rgba(89,50,234,.20)"
-                        : "0 4px 10px rgba(0,0,0,.06)"
-                  }}
-                >
-                  {m.content}
-                </div>
-              </div>
+                {withEmojis(m.content)}
+              </ReactMarkdown>
+            ) : (
+              // mensagem do usuário (opcionalmente com emojis também)
+              withEmojis(m.content)
+            )}
+
+            </div>
+
             ))}
           </div>
 

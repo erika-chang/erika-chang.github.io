@@ -81,8 +81,8 @@ const educationInfo = {
       schoolName: "University of São Paulo (USP)",
       logo: require("./assets/images/uspLogo.png"),
       subHeader: "M.Sc. in Biomolecular Physics",
-      duration: "—",
-      desc: ""
+      duration: "Feb 2013 - Feb 2015",
+      desc: "Biochemical preparation for molecular and structural characterization of the RNA virus LRV1-4"
     }
   ]
 };
