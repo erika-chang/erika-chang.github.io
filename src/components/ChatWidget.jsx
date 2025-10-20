@@ -23,33 +23,49 @@ export default function ChatWidget() {
     }
   }, [input]);
 
-  async function sendMessage(e) {
-    e.preventDefault();
-    const text = input.trim();
-    if (!text) return;
+async function sendMessage(e) {
+  e.preventDefault();
+  const text = input.trim();
+  if (!text) return;
 
-    const userMsg = { role: "user", content: text };
-    setMessages((m) => [...m, userMsg]);
-    setInput("");
+  const userMsg = { role: "user", content: text };
+  setMessages((m) => [...m, userMsg]);
+  setInput("");
 
-    try {
-      const res = await fetch(process.env.REACT_APP_CHAT_API_URL || "/api/mock", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text })
-      });
-      const data = await res.json();
-      setMessages((m) => [
-        ...m,
-        { role: "assistant", content: data.reply || "No response received." }
-      ]);
-    } catch {
-      setMessages((m) => [
-        ...m,
-        { role: "assistant", content: "Connection error. Try again later." }
-      ]);
+  try {
+    // Base URL vinda do build (sem barra final)
+    const base = (process.env.REACT_APP_CHAT_API_URL || "").replace(/\/$/, "");
+    // Se não existir, cai para mock
+    const url = base ? `${base}/ask` : "/api/mock";
+
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      mode: "cors",
+      body: JSON.stringify({ question: text }) // <- sua API espera "question"
+    });
+
+    if (!res.ok) {
+      const t = await res.text();
+      throw new Error(`HTTP ${res.status} – ${t}`);
     }
+
+    const data = await res.json();
+    const reply = data.answer || data.reply || "(empty response)";
+    setMessages((m) => [...m, { role: "assistant", content: reply }]);
+  } catch (err) {
+    console.error("Chat API error:", err);
+    setMessages((m) => [
+      ...m,
+      {
+        role: "assistant",
+        content:
+          "I couldn't reach the chatbot API. If this persists, it’s likely a CORS or URL issue."
+      }
+    ]);
   }
+}
+
 
   // Ícone SVG do botão flutuante
   const ChatIcon = () => (

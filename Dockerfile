@@ -12,6 +12,9 @@ RUN sed -i 's/throw new Error(ERR.requestMediumFailed);/console.warn("Medium fet
 # Remove qualquer tentativa de rodar fetch no build
 RUN sed -i 's/node fetch.js && //g' package.json
 
+ARG REACT_APP_CHAT_API_URL
+RUN printf 'REACT_APP_CHAT_API_URL="%s"\n' "$REACT_APP_CHAT_API_URL" > .env
+
 RUN npm run build
 
 # Stage 2 – Serve (apenas para teste local)
