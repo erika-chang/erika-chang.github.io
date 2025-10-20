@@ -28,43 +28,57 @@ async function sendMessage(e) {
   const text = input.trim();
   if (!text) return;
 
-  const userMsg = { role: "user", content: text };
-  setMessages((m) => [...m, userMsg]);
+  // mostra mensagem do usuário
+  setMessages((m) => [...m, { role: "user", content: text }]);
   setInput("");
 
-  try {
-    // Base URL vinda do build (sem barra final)
-    const base = (process.env.REACT_APP_CHAT_API_URL || "").replace(/\/$/, "");
-    // Se não existir, cai para mock
-    const url = base ? `${base}/ask` : "/api/mock";
+  // URL da API (ENV deve conter a base, com ou sem /ask)
+  const base = (process.env.REACT_APP_CHAT_API_URL || "").replace(/\/$/, "");
+  if (!base) {
+    setMessages((m) => [
+      ...m,
+      { role: "assistant", content: "Chat API URL is not set in the build." }
+    ]);
+    return;
+  }
+  const url = base.endsWith("/ask") ? base : `${base}/ask`;
 
+  try {
     const res = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       mode: "cors",
-      body: JSON.stringify({ question: text }) // <- sua API espera "question"
+      body: JSON.stringify({ question: text }) // sua API espera {question}
     });
 
-    if (!res.ok) {
-      const t = await res.text();
-      throw new Error(`HTTP ${res.status} – ${t}`);
-    }
+    // tenta extrair texto bruto para fallback
+    const raw = await res.text();
+    if (!res.ok) throw new Error(`HTTP ${res.status} – ${raw}`);
 
-    const data = await res.json();
-    const reply = data.answer || data.reply || "(empty response)";
-    setMessages((m) => [...m, { role: "assistant", content: reply }]);
+    // tenta parsear JSON
+    let data = {};
+    try { data = raw ? JSON.parse(raw) : {}; } catch { /* mantém vazio */ }
+
+    // captura campos comuns
+    const reply =
+      (data.answer ??
+      data.reply ??
+      data.output ??
+      data.message ??
+      (data.choices?.[0]?.message?.content) ??
+      (typeof data === "string" ? data : "")) ||
+      "(empty response)";
+
+    setMessages((m) => [...m, { role: "assistant", content: String(reply) }]);
   } catch (err) {
     console.error("Chat API error:", err);
     setMessages((m) => [
       ...m,
-      {
-        role: "assistant",
-        content:
-          "I couldn't reach the chatbot API. If this persists, it’s likely a CORS or URL issue."
-      }
+      { role: "assistant", content: "I couldn't reach the chatbot API." }
     ]);
   }
 }
+
 
 
   // Ícone SVG do botão flutuante
@@ -227,6 +241,14 @@ async function sendMessage(e) {
               ref={textareaRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();            // evita quebra de linha
+                  // simula o submit do form
+                  const fakeEvent = { preventDefault: () => {} };
+                  sendMessage(fakeEvent);
+                }
+              }}
               placeholder="Type your message..."
               style={{
                 flex: 1,
@@ -245,6 +267,7 @@ async function sendMessage(e) {
                 boxShadow: "inset 0 2px 5px rgba(0,0,0,0.04)"
               }}
             />
+
             <button
               type="submit"
               style={{
