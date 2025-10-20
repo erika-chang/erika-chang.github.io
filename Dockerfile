@@ -6,18 +6,13 @@ COPY package*.json ./
 RUN npm install
 COPY . .
 
-# (Opcional): se seu fetch.js ainda tem throw do Medium, evita quebrar o build
-RUN sed -i 's/throw new Error(ERR.requestMediumFailed);/console.warn("Medium fetch failed (non-blocking)");/' fetch.js || true
-
-# Remove qualquer tentativa de rodar fetch no build
-RUN sed -i 's/node fetch.js && //g' package.json
-
+# Injeta a variável de ambiente dentro do container de build
 ARG REACT_APP_CHAT_API_URL
 RUN printf 'REACT_APP_CHAT_API_URL="%s"\n' "$REACT_APP_CHAT_API_URL" > .env
 
 RUN npm run build
 
-# Stage 2 – Serve (apenas para teste local)
+# Stage 2 – Serve (opcional)
 FROM node:20.0-alpine AS serve
 WORKDIR /app
 RUN npm install -g serve
