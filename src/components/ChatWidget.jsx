@@ -105,7 +105,9 @@ async function sendMessage(e) {
       (typeof data === "string" ? data : "")) ||
       "(empty response)";
 
-    setMessages((m) => [...m, { role: "assistant", content: String(reply) }]);
+    const normalizedReply = normalizeReply(reply);
+
+    setMessages((m) => [...m, { role: "assistant", content: normalizedReply }]);
   } catch (err) {
     console.error("Chat API error:", err);
     setMessages((m) => [
