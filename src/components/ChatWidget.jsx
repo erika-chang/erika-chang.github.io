@@ -33,6 +33,28 @@ export default function ChatWidget() {
     }
   }, [input]);
 
+function normalizeReply(input) {
+  if (input == null) return "(empty response)";
+
+  let t = String(input).trim();
+
+  // Remove prefixos/ruídos como "(mock)" ou similares
+  t = t.replace(/^\(mock\)\s*/i, "");
+
+  // Padroniza “não sei”
+  const unknownPatterns = [
+    /i (do not|don't) know based on the current document/i,
+    /i (do not|don't) know based on the current (doc|docs|documents)/i,
+    /no (answer|context) available/i,
+    /not found in (document|docs|kb|knowledge base)/i
+  ];
+  if (unknownPatterns.some((p) => p.test(t))) {
+    return "I don't know based on the current document 🤷‍♀️";
+  }
+
+  return t;
+}
+
 async function sendMessage(e) {
   e.preventDefault();
   const text = input.trim();
@@ -67,7 +89,11 @@ async function sendMessage(e) {
 
     // tenta parsear JSON
     let data = {};
-    try { data = raw ? JSON.parse(raw) : {}; } catch { /* mantém vazio */ }
+    try {
+      data = raw ? JSON.parse(raw) : {};
+    } catch (parseError) {
+      // mantém vazio
+    }
 
     // captura campos comuns
     const reply =
@@ -214,33 +240,29 @@ async function sendMessage(e) {
                 padding: "12px 14px",
                 maxWidth: "85%",
                 lineHeight: 1.55,
-                fontSize: 15,
-                boxShadow:
-                  m.role === "user"
-                    ? "0 6px 16px rgba(89,50,234,.20)"
-                    : "0 4px 10px rgba(0,0,0,.06)"
+                fontSize: 15
               }}
             >
-            {m.role === "assistant" ? (
-              <ReactMarkdown
-                remarkPlugins={[remarkGfm]}
-                components={{
-                  li: ({children}) => <li style={{margin: "4px 0"}}>{children}</li>,
-                  ul: ({children}) => <ul style={{paddingLeft: 20, margin: "6px 0"}}>{children}</ul>,
-                  strong: ({children}) => <strong style={{fontWeight: 700}}>{children}</strong>,
-                  em: ({children}) => <em style={{fontStyle: "italic"}}>{children}</em>,
-                  p: ({children}) => <p style={{margin: "6px 0"}}>{children}</p>,
-                  a: (props) => <a {...props} target="_blank" rel="noopener noreferrer" />
-                }}
-              >
-                {withEmojis(m.content)}
-              </ReactMarkdown>
-            ) : (
-              // mensagem do usuário (opcionalmente com emojis também)
-              withEmojis(m.content)
-            )}
+              {m.role === "assistant" ? (
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    p: (props) => <p style={{ margin: "6px 0" }} {...props} />,
+                    ul: (props) => <ul style={{ paddingLeft: 20, margin: "6px 0" }} {...props} />,
+                    ol: (props) => <ol style={{ paddingLeft: 22, margin: "6px 0" }} {...props} />,
+                    li: (props) => <li style={{ margin: "4px 0" }} {...props} />,
+                    strong: (props) => <strong style={{ fontWeight: 700 }} {...props} />,
+                    em: (props) => <em style={{ fontStyle: "italic" }} {...props} />,
+                    a: (props) => <a {...props} target="_blank" rel="noopener noreferrer" />
+                  }}
+                >
+                  {withEmojis(m.content)}
+                </ReactMarkdown>
+              ) : (
+                withEmojis(m.content)
+              )}
+</div>
 
-            </div>
 
             ))}
           </div>
