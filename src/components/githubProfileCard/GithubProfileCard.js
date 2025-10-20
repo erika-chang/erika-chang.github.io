@@ -6,12 +6,13 @@ import emoji from "react-easy-emoji";
 import {Fade} from "react-reveal";
 
 export default function GithubProfileCard({prof}) {
-  if (isHireable) {
-    prof.hireable = "Yes";
-  } else {
-    prof.hireable = "No";
-  }
-  return (
+ if (!prof) return null;          // ← evita crash quando não há dados
+   if (isHireable) {
+     prof.hireable = "Yes";
+   } else {
+     prof.hireable = "No";
+   }
+   return (
     <Fade bottom duration={1000} distance="20px">
       <div className="main" id="contact">
         <h1 className="prof-title">Reach Out to me!</h1>
