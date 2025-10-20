@@ -24,6 +24,22 @@ export default function Contact() {
             >
               {contactInfo.subtitle}
             </p>
+            {contactInfo.additionalInfo && (
+              <p
+                className={
+                  isDark
+                    ? "dark-mode contact-subtitle"
+                    : "subTitle contact-subtitle"
+                }
+              >
+                {contactInfo.additionalInfo.split('\n').map((line, index) => (
+                  <React.Fragment key={index}>
+                    {line}
+                    {index < contactInfo.additionalInfo.split('\n').length - 1 && <br />}
+                  </React.Fragment>
+                ))}
+              </p>
+            )}
             <div
               className={
                 isDark ? "dark-mode contact-text-div" : "contact-text-div"

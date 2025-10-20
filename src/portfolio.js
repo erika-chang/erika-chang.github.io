@@ -234,7 +234,8 @@ const resumeSection = {
 const contactInfo = {
   title: "Reach Out to me!",
   subtitle:
-    "Interested in collaborating or just want to say hi? My inbox is open.",
+    "Discuss a project or just want to say hi? My Inbox is open for all.",
+  additionalInfo: "Data Scientist | building predictive models\nRemote\nOpen for opportunities: Yes",
   email_address: "hello@erikachang.me"
 };
 
